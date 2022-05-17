@@ -155,6 +155,10 @@ int LinkedList::getItem(int position){
     Node* itr = get_head();
     int data;
 
+    if(position<1){
+        data = std::numeric_limits<int>::max();
+    }
+
     for(int i = 0; i<position; i++){
         itr = itr->get_next();
 
