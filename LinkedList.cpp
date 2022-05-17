@@ -153,17 +153,20 @@ void LinkedList::deletePosition(int position){
 int LinkedList::getItem(int position){
 
     Node* itr = get_head();
+    int data;
 
     for(int i = 0; i<position; i++){
         itr = itr->get_next();
+
+        if(itr == nullptr){
+
+            data = std::numeric_limits<int>::max();
+
+            break;
+        }
     }
 
-    int data;
-
-    if(itr == nullptr){
-        data = std::numeric_limits < int >::max();
-    }
-    else{
+    if(itr != nullptr){
         data = itr->get_data();
     }
 
@@ -179,9 +182,10 @@ int LinkedList::search(int item){
 
     int pos = 1;
 
-    while(itr->get_data() != item){
+    while(itr->get_next()->get_data() != item){
 
-        if(itr == nullptr){
+        if(itr->get_next()->get_next() == nullptr){
+
             pos = 0;
             break;
         }

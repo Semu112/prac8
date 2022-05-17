@@ -3,8 +3,6 @@
 
 #include "Node.h"
 
-#include <iostream>
-
 class LinkedList{
 
     public:

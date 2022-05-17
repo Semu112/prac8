@@ -26,7 +26,7 @@ int main(void){
 
     for(int i = 0; i<strArray.size(); i++){
 
-        if(std::isdigit(strArray[i])){
+        if(std::isdigit(strArray[i]) || strArray[i] == '-'){
 
             arrLength++;
             int numLength = 0;
@@ -38,7 +38,7 @@ int main(void){
                     end = j-1;
                     break;
                 }
-                else if(std::isdigit(strArray[j])){
+                else if(std::isdigit(strArray[j]) || strArray[j] == '-'){
                     numLength++;
                 }
             }
@@ -74,10 +74,10 @@ int main(void){
     for(int i = alphaEnds + arrayEnds; i<input.size(); i++){
 
         int numLength = 0;
-        if(isdigit(input[i])){
+        if(isdigit(input[i]) || input[i] == '-'){
 
             for(int j = i; j<input.size(); j++){
-                if(isdigit(input[j])){
+                if(isdigit(input[j]) || input[j] == '-'){
                     numLength++;
                 }
                 else{
