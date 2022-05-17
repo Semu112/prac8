@@ -34,7 +34,7 @@ int main(void){
             int end = strArray.size()-1;
             for(int j = i; j<strArray.size(); j++){
 
-                if(strArray[j] == ' '){
+                if(!std::isdigit(strArray[j])){
                     end = j-1;
                     break;
                 }
