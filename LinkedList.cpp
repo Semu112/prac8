@@ -201,10 +201,11 @@ void LinkedList::printItems(){
 
     Node* itr = this->get_head();
 
-    while(itr != nullptr){
+    while(itr->get_next() != nullptr){
 
         std::cout << itr->get_next()->get_data() << " ";
         itr = itr->get_next();
+
     }
 
     return;

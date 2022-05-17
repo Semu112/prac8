@@ -3,6 +3,8 @@
 
 #include "Node.h"
 
+#include <iostream>
+
 class LinkedList{
 
     public:
@@ -38,7 +40,7 @@ class LinkedList{
             }
         }
         ~LinkedList(){
-            
+        
             Node* itr = this->get_head();
 
             while(itr != nullptr){
@@ -47,8 +49,6 @@ class LinkedList{
 
                 this->deleteFront();
             }
-
-            delete[] this;
 
         }
 
