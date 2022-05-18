@@ -23,12 +23,12 @@ bool LinkedList::isEmpty(){
 }
 
 void LinkedList::addFront(int newItem){
+
     Node* newNode = new Node;
 
     newNode->set_data(newItem);
-    newNode->set_next(get_head());
-
-    set_head(newNode);
+    newNode->set_next(this->get_head());
+    this->set_head(newNode);
 
     return;
     
@@ -36,24 +36,16 @@ void LinkedList::addFront(int newItem){
 
 void LinkedList::addEnd(int newItem){
 
-    Node* itr = get_head(); //sets endPtr to the start of the list
+    Node* endNode = this->getEnd();
 
     Node* newNode = new Node;
     newNode->set_data(newItem);
 
-    if(itr == nullptr){
+    if(endNode == nullptr){ //If list has one element or less
         this->set_head(newNode);
     }
     else{
-
-        while(itr->get_next() != nullptr){ //Iterates through list until endPtr is nullPtr
-
-            itr = itr->get_next();
-
-        }
-
-        itr->set_next(newNode);
-
+        endNode->set_next(newNode);
     }
 
     return;
@@ -62,30 +54,30 @@ void LinkedList::addEnd(int newItem){
 
 void LinkedList::addAtPosition(int position, int newItem){
 
-    if(position == 0){
+    if(position<=1){
         this->addFront(newItem);
     }
     else{
 
-        Node* newNode = new Node;
-        newNode->set_data(newItem);
+        Node* nodeBefore = this->getNode(position-1);
 
-        Node* itr = get_head();
+        //If conditions for if we are trying to add an item at or beyond the end index
+        if(nodeBefore != nullptr){
 
-        for(int i = 0; i<position-1; i++){
-            itr = itr->get_next();
+            Node* nextNode = nodeBefore->get_next();
+            if(nodeBefore->get_next() != nullptr){ //If there is an element at the index we've chosen
 
-            if(itr == nullptr){
-                this->addEnd(newItem);
+                Node* newNode = new Node;
+                newNode->set_data(newItem);
+                newNode->set_next(nextNode); 
+
+                nodeBefore->set_next(newNode);
+
                 return;
+
             }
         }
-
-        Node* nextNode = itr->get_next();
-
-        newNode->set_next(nextNode);
-
-        itr->set_next(newNode);
+        this->addEnd(newItem);
 
     }
 
@@ -96,27 +88,9 @@ void LinkedList::deleteFront(){
 
     Node* newHead = this->get_head()->get_next();
 
-    delete[] this->get_head();
+    delete this->get_head();
 
     this->set_head(newHead);
-
-    return;
-
-}
-
-void LinkedList::deleteEnd(){
-
-    Node* itr = this->get_head();
-
-    while(itr->get_next()->get_next() != nullptr){
-
-        itr = itr->get_next();
-
-    }
-
-    delete[] itr->get_next();
-
-    itr->set_next(nullptr);
 
     return;
 
@@ -129,22 +103,47 @@ void LinkedList::deletePosition(int position){
         return;
     }
 
-    Node* itr = get_head();
-
-    for(int i = 0; i<position-1; i++){
-        itr = itr->get_next();
-    }
-
-    if(itr == nullptr){
+    Node* nodeBefore = this->getNode(position-1);
+    if(nodeBefore == nullptr){
         std::cout << "Outside range" << std::endl;
         return;
     }
 
-    Node* temp = itr->get_next();
+    Node* node = nodeBefore->get_next();
 
-    itr->set_next(itr->get_next()->get_next());
+    if(node == nullptr){ //Assuming that if get_next() is called on a null pointer it will return a null pointer
+        std::cout << "Outside range" << std::endl;
+        return;
+    }
 
-    delete[] temp;
+    nodeBefore->set_next(node->get_next());
+
+    delete node;
+
+    return;
+
+}
+
+void LinkedList::deleteEnd(){
+
+    if(this->get_head() != nullptr){
+        if(this->get_head()->get_next() == nullptr){ //If there's only one element in the list
+
+            delete this->get_head();
+            this->set_head(nullptr);
+
+        }
+        else{
+
+            Node* nodeBefore = this->getBeforeEnd();
+            Node* node = nodeBefore->get_next();
+
+            nodeBefore->set_next(nullptr);
+
+            delete node;
+
+        }
+    }
 
     return;
 
@@ -152,25 +151,19 @@ void LinkedList::deletePosition(int position){
 
 int LinkedList::getItem(int position){
 
-    Node* itr = get_head();
     int data;
 
-    for(int i = 0; i<position; i++){
-        itr = itr->get_next();
+    if(!(position<1)){
+        Node* node = this->getNode(position);
 
-        if(itr == nullptr){
-
+        if(node == nullptr){
             data = std::numeric_limits<int>::max();
-
-            break;
+        }
+        else{
+            data = node->get_data();
         }
     }
-
-    if(itr != nullptr){
-        data = itr->get_data();
-    }
-
-    if(position<1){
+    else{
         data = std::numeric_limits<int>::max();
     }
 
@@ -182,19 +175,24 @@ int LinkedList::getItem(int position){
 
 int LinkedList::search(int item){
 
-    Node* itr = get_head();
+    Node* itr = this->get_head();
+
+    if(itr == nullptr){
+        return 0;
+    }
 
     int pos = 1;
 
-    while(itr->get_next()->get_data() != item){
+    while(itr->get_data() != item){
 
-        if(itr->get_next()->get_next() == nullptr){
+        itr = itr->get_next();
+
+        if(itr == nullptr){
 
             pos = 0;
             break;
         }
 
-        itr = itr->get_next();
         pos++;
 
     }
@@ -208,14 +206,69 @@ int LinkedList::search(int item){
 void LinkedList::printItems(){
 
     Node* itr = this->get_head();
+    if(itr == nullptr){
+        return;
+    }
 
-    while(itr->get_next() != nullptr){
+    while(itr != nullptr){
 
-        std::cout << itr->get_next()->get_data() << " ";
+        std::cout << itr->get_data() << " ";
         itr = itr->get_next();
 
     }
 
     return;
+
+}
+
+Node* LinkedList::getNode(int position){
+
+    Node* itr = this->get_head();
+
+    for(int i = 0; i<position-1; i++){
+        if(itr == nullptr){
+            return nullptr;
+        }
+
+        itr = itr->get_next();
+    }
+
+    return itr;
+}
+
+Node* LinkedList::getBeforeEnd(){
+
+    Node* itr = this->get_head();
+
+    if(itr != nullptr){ //If list has at least 1 element
+
+        if(itr->get_next()->get_next() != nullptr){ //If list has at least 2 elements
+
+            while(itr->get_next()->get_next() != nullptr){
+
+                itr = itr->get_next();
+
+            }
+        }        
+    }
+
+    return itr;
+
+}
+
+Node* LinkedList::getEnd(){
+
+    Node* itr = this->get_head();
+
+    if(itr != nullptr){ //If list has at least 1 element
+
+        while(itr->get_next() != nullptr){
+
+            itr = itr->get_next();
+
+        }    
+    }
+
+    return itr;
 
 }

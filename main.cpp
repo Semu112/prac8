@@ -16,7 +16,7 @@ int main(void){
     std::string strArray;
     int arrayEnds = 0;
 
-    while(std::isdigit(input[arrayEnds]) || input[arrayEnds] == ' '){
+    while(!std::isalpha(input[arrayEnds])){
         arrayEnds++;
     }
 
@@ -24,32 +24,30 @@ int main(void){
     int arrLength = 0;
     int arrItr = 0;
 
-    for(int i = 0; i<strArray.size(); i++){
+    int i = 0;
+    while(!std::isalpha(input[i])){
+        arrLength++;
+        int numLength = 0;
 
-        if(std::isdigit(strArray[i]) || strArray[i] == '-'){
+        int end = strArray.size()-1;
+        for(int j = i; j<strArray.size(); j++){
 
-            arrLength++;
-            int numLength = 0;
-
-            int end = strArray.size()-1;
-            for(int j = i; j<strArray.size(); j++){
-
-                if(!std::isdigit(strArray[j])){
-                    end = j-1;
-                    break;
-                }
-                else if(std::isdigit(strArray[j]) || strArray[j] == '-'){
-                    numLength++;
-                }
+            if(!std::isdigit(strArray[j])){
+                end = j-1;
+                break;
             }
-
-            std::string n = strArray.substr(i, end-i+1);
-            arr[arrItr] = stoi(n);
-            arrItr++; 
-
-            i = i + numLength;
+            else if(std::isdigit(strArray[j]) || strArray[j] == '-'){
+                numLength++;
+            }
         }
 
+        std::string n = strArray.substr(i, end-i+1);
+        arr[arrItr] = stoi(n);
+        arrItr++; 
+
+        i = i + numLength;
+
+        i++;
     }
 
 
@@ -63,7 +61,6 @@ int main(void){
     alphaEnds = alphaEnds-arrayEnds;
 
     std::string function = input.substr(arrayEnds, alphaEnds);
-
 
     //parameters
     int param1;

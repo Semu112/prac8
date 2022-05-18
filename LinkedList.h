@@ -3,6 +3,8 @@
 
 #include "Node.h"
 
+#include <iostream>
+
 class LinkedList{
 
     public:
@@ -10,6 +12,10 @@ class LinkedList{
         //Getters and setters
         Node* get_head();
         void set_head(Node* newHead);
+
+        Node* getNode(int position);
+        Node* getBeforeEnd();
+        Node* getEnd();
 
         bool isEmpty();
 
@@ -31,14 +37,21 @@ class LinkedList{
         }
         LinkedList(int* array, int size){
 
-            this->head = new Node;
+            if(size>0){
 
-            for(int i = 0; i<size; i++){
-                this->addEnd(array[i]);
+                Node* firstNode = new Node;
+                firstNode->set_data(array[0]);
+
+                this->head = firstNode;
+
+                for(int i = 1; i<size; i++){
+                    this->addEnd(array[i]);
+                }
             }
+            
         }
         ~LinkedList(){
-        
+
             Node* itr = this->get_head();
 
             while(itr != nullptr){
